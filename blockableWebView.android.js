@@ -10,28 +10,26 @@
  */
 'use strict';
 
-var EdgeInsetsPropType = require('EdgeInsetsPropType');
-var ActivityIndicator = require('ActivityIndicator');
-var RCTDeviceEventEmitter = require('RCTDeviceEventEmitter');
-var React = require('React');
-var ReactNative = require('react/lib/ReactNative');
-var ReactNativeViewAttributes = require('ReactNativeViewAttributes');
-var StyleSheet = require('StyleSheet');
-var UIManager = require('UIManager');
-var View = require('View');
+import React, { PropTypes } from 'react';
+import {
+  ActivityIndicator,
+  EdgeInsetsPropType,
+  DeviceEventEmitter,
+  ReactNativeViewAttributes,
+  StyleSheet,
+  UIManager,
+  View,
+  requireNativeComponent,
+} from 'react-native';
+import ReactNative from 'react/lib/ReactNative';
 
-var deprecatedPropType = require('deprecatedPropType');
-var keyMirror = require('fbjs/lib/keyMirror');
-var merge = require('merge');
-var requireNativeComponent = require('requireNativeComponent');
-var resolveAssetSource = require('resolveAssetSource');
+import keyMirror from 'keymirror';
+import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
-var PropTypes = React.PropTypes;
+const RCT_WEBVIEW_REF = 'webview';
+const WEBVIEW_BLOCKED_EVENT = 'navigationBlocked'
 
-var RCT_WEBVIEW_REF = 'webview';
-var WEBVIEW_BLOCKED_EVENT = 'navigationBlocked'
-
-var WebViewState = keyMirror({
+const WebViewState = keyMirror({
   IDLE: null,
   LOADING: null,
   ERROR: null,
@@ -63,16 +61,6 @@ class WebView extends React.Component {
     onContentSizeChange: PropTypes.func,
     startInLoadingState: PropTypes.bool, // force WebView to show loadingView on first load
     style: View.propTypes.style,
-
-    html: deprecatedPropType(
-      PropTypes.string,
-      'Use the `source` prop instead.'
-    ),
-
-    url: deprecatedPropType(
-      PropTypes.string,
-      'Use the `source` prop instead.'
-    ),
 
     /**
      * Loads static html or a uri (with optional headers) in the WebView.
@@ -187,7 +175,7 @@ class WebView extends React.Component {
       this.setState({viewState: WebViewState.LOADING});
     }
 
-    RCTDeviceEventEmitter.addListener(WEBVIEW_BLOCKED_EVENT, this.onNavigationBlocked);
+    DeviceEventEmitter.addListener(WEBVIEW_BLOCKED_EVENT, this.onNavigationBlocked);
   }
 
   render() {
