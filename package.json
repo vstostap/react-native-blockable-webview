@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/rseemann/react-native-blockable-webview/issues"
   },
-  "homepage": "https://github.com/rseemann/react-native-blockable-webview#readme"
+  "homepage": "https://github.com/rseemann/react-native-blockable-webview#readme",
+  "dependencies": {
+    "fbjs": "^0.8.8"
+  }
 }
