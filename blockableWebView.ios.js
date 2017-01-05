@@ -36,21 +36,21 @@ import React from 'react';
 
 import deprecatedPropType from 'react-native/Libraries/Utilities/deprecatedPropType';
 // var deprecatedPropType = require('deprecatedPropType');
-var invariant = require('fbjs/lib/invariant');
-var keyMirror = require('fbjs/lib/keyMirror');
+const invariant = require('fbjs/lib/invariant');
+const keyMirror = require('fbjs/lib/keyMirror');
 import processDecelerationRate from 'react-native/Libraries/Components/ScrollView/processDecelerationRate';
 // var processDecelerationRate = require('processDecelerationRate');
 // var requireNativeComponent = require('requireNativeComponent');
 // var resolveAssetSource = require('resolveAssetSource');
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
-var PropTypes = React.PropTypes;
-var BlockableWebViewManager = NativeModules.BlockableWebViewManager;
+const PropTypes = React.PropTypes;
+const BlockableWebViewManager = NativeModules.BlockableWebViewManager;
 
-var BGWASH = 'rgba(255,255,255,0.8)';
-var RCT_WEBVIEW_REF = 'webview';
+const BGWASH = 'rgba(255,255,255,0.8)';
+const RCT_WEBVIEW_REF = 'webview';
 
-var WebViewState = keyMirror({
+const WebViewState = keyMirror({
   IDLE: null,
   LOADING: null,
   ERROR: null,
@@ -84,12 +84,13 @@ const DataDetectorTypes = [
   'all',
 ];
 
-var defaultRenderLoading = () => (
+const defaultRenderLoading = () => (
   <View style={styles.loadingView}>
     <ActivityIndicator />
   </View>
 );
-var defaultRenderError = (errorDomain, errorCode, errorDesc) => (
+
+const defaultRenderError = (errorDomain, errorCode, errorDesc) => (
   <View style={styles.errorContainer}>
     <Text style={styles.errorTextTitle}>
       Error loading page
@@ -446,14 +447,20 @@ class WebView extends React.Component {
   }
 
   /**
-   * Go forward one page in the web view's history.
+   * We return an event with a bunch of fields including:
+   *  url, title, loading, canGoBack, canGoForward
    */
-  goForward = () => {
-    UIManager.dispatchViewManagerCommand(
-      this.getWebViewHandle(),
-      UIManager.BlockableWebView.Commands.goForward,
-      null
-    );
+  _updateNavigationState = (event: Event) => {
+    if (this.props.onNavigationStateChange) {
+      this.props.onNavigationStateChange(event.nativeEvent);
+    }
+  };
+
+  /**
+   * Returns the native `WebView` node.
+   */
+  getWebViewHandle = (): any => {
+    return findNodeHandle(this.refs[RCT_WEBVIEW_REF]);
   };
 
   /**
@@ -468,10 +475,21 @@ class WebView extends React.Component {
   };
 
   /**
+   * Go forward one page in the web view's history.
+   */
+  goForward = () => {
+    UIManager.dispatchViewManagerCommand(
+      this.getWebViewHandle(),
+      UIManager.BlockableWebView.Commands.goForward,
+      null
+    );
+  };
+
+  /**
    * Reloads the current page.
    */
   reload = () => {
-    this.setState({viewState: WebViewState.LOADING});
+    this.setState({ viewState: WebViewState.LOADING });
     UIManager.dispatchViewManagerCommand(
       this.getWebViewHandle(),
       UIManager.BlockableWebView.Commands.reload,
@@ -490,44 +508,27 @@ class WebView extends React.Component {
     );
   };
 
-  /**
-   * We return an event with a bunch of fields including:
-   *  url, title, loading, canGoBack, canGoForward
-   */
-  _updateNavigationState = (event: Event) => {
-    if (this.props.onNavigationStateChange) {
-      this.props.onNavigationStateChange(event.nativeEvent);
-    }
-  };
-
-  /**
-   * Returns the native `WebView` node.
-   */
-  getWebViewHandle = (): any => {
-    return findNodeHandle(this.refs[RCT_WEBVIEW_REF]);
-  };
-
   _onLoadingStart = (event: Event) => {
-    var onLoadStart = this.props.onLoadStart;
+    const onLoadStart = this.props.onLoadStart;
     onLoadStart && onLoadStart(event);
     this._updateNavigationState(event);
   };
 
   _onLoadingError = (event: Event) => {
     event.persist(); // persist this event because we need to store it
-    var {onError, onLoadEnd} = this.props;
+    const { onError, onLoadEnd } = this.props;
     onError && onError(event);
     onLoadEnd && onLoadEnd(event);
     console.warn('Encountered an error loading page', event.nativeEvent);
 
     this.setState({
       lastErrorEvent: event.nativeEvent,
-      viewState: WebViewState.ERROR
+      viewState: WebViewState.ERROR,
     });
   };
 
   _onLoadingFinish = (event: Event) => {
-    var {onLoad, onLoadEnd} = this.props;
+    const { onLoad, onLoadEnd } = this.props;
     onLoad && onLoad(event);
     onLoadEnd && onLoadEnd(event);
     this.setState({
@@ -537,7 +538,7 @@ class WebView extends React.Component {
   };
 }
 
-var BlockableWebView = requireNativeComponent('BlockableWebView', WebView, {
+const BlockableWebView = requireNativeComponent('BlockableWebView', WebView, {
   nativeOnly: {
     onLoadingStart: true,
     onLoadingError: true,
@@ -545,7 +546,7 @@ var BlockableWebView = requireNativeComponent('BlockableWebView', WebView, {
   },
 });
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
@@ -578,7 +579,7 @@ var styles = StyleSheet.create({
   },
   webView: {
     backgroundColor: '#ffffff',
-  }
+  },
 });
 
 module.exports = WebView;
