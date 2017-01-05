@@ -21,13 +21,13 @@ import {
   ScrollView,
   View,
   requireNativeComponent,
+  findNodeHandle,
 } from 'react-native';
 
 import React from 'react';
 // var ActivityIndicator = require('ActivityIndicator');
 // var EdgeInsetsPropType = require('EdgeInsetsPropType');
 // var React = require('React');
-var ReactNative = require('react/lib/ReactNative');
 // var StyleSheet = require('StyleSheet');
 // var Text = require('Text');
 // var UIManager = require('UIManager');
@@ -504,7 +504,7 @@ class WebView extends React.Component {
    * Returns the native `WebView` node.
    */
   getWebViewHandle = (): any => {
-    return ReactNative.findNodeHandle(this.refs[RCT_WEBVIEW_REF]);
+    return findNodeHandle(this.refs[RCT_WEBVIEW_REF]);
   };
 
   _onLoadingStart = (event: Event) => {
