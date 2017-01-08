@@ -8,8 +8,8 @@
 
 #import "BlockableWebViewManager.h"
 
-#import "RCTBridge.h"
-#import "RCTUIManager.h"
+#import <React/RCTBridge.h>
+#import <React/RCTUIManager.h>
 #import "BlockableWebView.h"
 #import "UIView+React.h"
 
