@@ -23,7 +23,7 @@ import {
   findNodeHandle
 } from 'react-native';
 
-import keyMirror from 'keymirror';
+const keyMirror = require('fbjs/lib/keyMirror');
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
 const RCT_WEBVIEW_REF = 'webview';
