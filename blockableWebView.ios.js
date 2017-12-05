@@ -25,6 +25,7 @@ import {
 } from 'react-native';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 // var ActivityIndicator = require('ActivityIndicator');
 // var EdgeInsetsPropType = require('EdgeInsetsPropType');
 // var React = require('React');
@@ -44,7 +45,6 @@ import processDecelerationRate from 'react-native/Libraries/Components/ScrollVie
 // var resolveAssetSource = require('resolveAssetSource');
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
-const PropTypes = React.PropTypes;
 const BlockableWebViewManager = NativeModules.BlockableWebViewManager;
 
 const BGWASH = 'rgba(255,255,255,0.8)';
